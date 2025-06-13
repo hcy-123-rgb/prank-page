@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>整蛊页面</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            touch-action: manipulation; /* 优化移动端触摸 */
+        }
+        
+        /* 第一个页面样式 */
+        #first-page {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #e6f2ff;
+        }
+        
+        .gif-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        /* 顶部/底部改为JPG格式 */
+        .gif-top {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20%; /* 缩小高度适应手机 */
+            object-fit: cover;
+        }
+        
+        .gif-bottom {
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20%; /* 缩小高度适应手机 */
+            object-fit: cover;
+        }
+        
+        .gif-left {
+            top: 20%;
+            left: 0;
+            width: 25%;
+            height: 60%; /* 调整高度 */
+            object-fit: cover;
+        }
+        
+        .gif-right {
+            top: 20%;
+            right: 0;
+            width: 25%;
+            height: 60%; /* 调整高度 */
+            object-fit: cover;
+        }
+        
+        .prompt-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            width: 90%; /* 手机端加宽 */
+            max-width: 500px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        /* 炫彩文字样式 - 扣一送法拉利 */
+        .rainbow-text {
+            font-size: 12vw; /* 响应式字体大小 */
+            font-weight: bold;
+            margin-bottom: 5vw;
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: rainbow 3s ease infinite;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            word-break: break-word; /* 防止文字溢出 */
+        }
+        
+        /* 炫彩文字样式 - 徐钰雯是猪 */
+        #joke-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14vw; /* 响应式字体大小 */
+            font-weight: bold;
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: 
+                rainbow 3s ease infinite,
+                fadeInScale 1.5s ease-out forwards,
+                pulse 2s ease-in-out infinite 1.5s;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+            z-index: 2;
+            opacity: 0;
+            width: 90%; /* 防止文字溢出 */
+            text-align: center;
+        }
+        
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes fadeInScale {
+            0% { 
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            100% { 
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+        }
+        
+        .prompt-input {
+            padding: 4vw 6vw; /* 响应式内边距 */
+            font-size: 5vw; /* 响应式字体大小 */
+            border: 2px solid #4da6ff;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #333;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 5vw;
+        }
+        
+        /* 第二个页面样式 */
+        #joke-page {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            overflow: hidden;
+        }
+        
+        #video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        /* 手机端特定样式 */
+        @media (max-width: 768px) {
+            .gif-top, .gif-bottom {
+                height: 15%; /* 手机端更小的高度 */
+            }
+            .gif-left, .gif-right {
+                top: 15%;
+                height: 70%;
+            }
+            .prompt-input {
+                font-size: 6vw; /* 手机端稍大的字体 */
+                padding: 5vw 7vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 第一个页面 -->
+    <div id="first-page">
+        <!-- 四个方向的图片（顶部/底部改为JPG） -->
+        <img class="gif-container gif-top" src="top.jpg" alt="顶部图片">
+        <img class="gif-container gif-bottom" src="bottom.jpg" alt="底部图片">
+        <img class="gif-container gif-left" src="left.gif" alt="左侧动图">
+        <img class="gif-container gif-right" src="right.gif" alt="右侧动图">
+        
+        <div class="prompt-container">
+            <div class="rainbow-text">扣一送法拉利</div>
+            <script>
+                // 页面加载后显示输入框
+                window.onload = function() {
+                    // 创建自定义输入框
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'prompt-input';
+                    input.placeholder = '请输入1';
+                    
+                    // 添加事件监听器
+                    input.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
+                            if (input.value === '1') {
+                                // 显示整蛊页面
+                                document.getElementById("first-page").style.display = "none";
+                                document.getElementById("joke-page").style.display = "block";
+                                
+                                // 播放视频
+                                const video = document.getElementById("video-bg");
+                                video.play().catch(e => console.log("自动播放被阻止:", e));
+                                
+                                // 显示震撼文字
+                                setTimeout(() => {
+                                    document.getElementById("joke-message").style.opacity = "1";
+                                }, 500);
+                            }
+                        }
+                    });
+                    
+                    // 添加到页面
+                    document.querySelector('.prompt-container').appendChild(input);
+                    input.focus(); // 自动聚焦到输入框
+                };
+            </script>
+        </div>
+    </div>
+    
+    <!-- 第二个页面 -->
+    <div id="joke-page">
+        <!-- 背景视频 -->
+        <video id="video-bg" autoplay loop muted playsinline>
+            <source src="11.mp4" type="video/mp4">
+            您的浏览器不支持视频播放
+        </video>
+        <!-- 炫彩震撼文字 -->
+        <div id="joke-message">徐钰雯是猪</div>
+    </div>
+
+    <script>
+        // 解决移动端自动播放问题
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById("video-bg");
+            const playVideo = function() {
+                video.muted = true;
+                video.play().then(() => {
+                    // 在iOS上需要用户交互后才能取消静音
+                    document.body.addEventListener('click', function unmute() {
+                        video.muted = false;
+                        document.body.removeEventListener('click', unmute);
+                    }, { once: true });
+                }).catch(e => console.log("播放错误:", e));
+            };
+            
+            // 尝试自动播放
+            playVideo();
+            
+            // 添加触摸事件监听器
+            document.addEventListener('touchstart', function() {
+                playVideo();
+            }, { once: true });
+        });
+    </script>
+</body>
+</html>
